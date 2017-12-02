@@ -21,15 +21,38 @@ $spreadsheet[] = [6151,5857,4865,437,6210,237,37,410,544,214,233,6532,2114,207,5
 $checksum = 0;
 
 foreach ($spreadsheet as $row) {
-    $max = $row[0];
-    $min = $row[0];
+    for ($num_index = 0; $num_index < count($row); $num_index++) {
+        for ($den_index = 0; $den_index < count($row); $den_index++) {
+            if ($num_index == $den_index) { continue; }
 
-    foreach($row as $cell) {
-        if ($cell > $max) { $max = $cell; }
-        if ($cell < $min) { $min = $cell; }
+            $numerator   = $row[$num_index];
+            $denominator = $row[$den_index];
+
+
+            if ($numerator % $denominator == 0) {
+                $checksum += $numerator / $denominator;
+                continue 2;
+            }
+        }
     }
-
-    $checksum += $max - $min;
 }
 
-print "Solution: {$checksum}\n";
+print "Solution 2: {$checksum}\n";
+
+function range_checksum($spreadsheet) {
+    $checksum = 0;
+
+    foreach ($spreadsheet as $row) {
+        $max = $row[0];
+        $min = $row[0];
+
+        foreach($row as $cell) {
+            if ($cell > $max) { $max = $cell; }
+            if ($cell < $min) { $min = $cell; }
+        }
+
+        $checksum += $max - $min;
+    }
+
+    return $checksum;    
+}
