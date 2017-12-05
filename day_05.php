@@ -7,7 +7,13 @@ $jump_count = 0;
 
 while ($pointer < count($jump_list)) {
     $distance = $jump_list[$pointer];
-    $jump_list[$pointer]++;
+
+    if ($distance >= 3) {
+        $jump_list[$pointer]--;
+    } else {
+        $jump_list[$pointer]++;
+    }
+    
     $pointer += $distance;
     $jump_count++;
 }
