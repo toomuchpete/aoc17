@@ -19,4 +19,9 @@ while (!in_array(implode('_', $banks), $history)) {
     }
 }
 
-echo "Result: " . count($history);
+$seen_at_step = [];
+$seen_at_step[] = count($history);
+$seen_at_step[] = array_search(implode('_', $banks), $history);
+
+echo "Total Balance Steps: " . count($history) . "\n";
+echo "Distance between dupes: " . ($seen_at_step[0] - $seen_at_step[1]) . "\n";
