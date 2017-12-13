@@ -15,24 +15,20 @@ $first_layer = min(array_keys($layer_depths));
 $last_layer  = max(array_keys($layer_depths));
 
 $severity = 0;
-$position = -1;
+$delay = 0;
 
-for ($time = 0 ; $time <= $last_layer; $time++) {
-    // Move the packet
-    $position++;
+do {
+    $caught   = false;
 
-    // Check for caught
-    if (isset($layer_depths[$position]) && ($layer_positions[$position] == 0)) {
-        $severity += $position * $layer_depths[$position];
-        echo "Caught at {$position}\n";
+    foreach ($layer_depths as $layer => $depth) {
+        $time = $delay + $layer;
+        if ($time % (($depth-1)*2) == 0) {
+            $caught = true;
+            break;
+        }
     }
 
-    // Move the scanner
-    foreach($layer_positions as $layer => $scanner_position) {
-        $depth = $layer_depths[$layer];
-        $new_pos = ($scanner_position+1) % (($depth-1)*2);
-        $layer_positions[$layer] = $new_pos;
-    }
-}
+    if ($caught) { $delay++; }
+} while ($caught);
 
-echo "Severity: {$severity}\n";
+echo "Required delay: {$delay}\n";
