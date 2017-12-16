@@ -1,6 +1,6 @@
 <?php
 
-    $program_positions = str_split('abcdefghijklmnop');
+    $program_positions = 'abcdefghijklmnop';
     $input = trim(file_get_contents('./data/day_16.txt'));
 
     $instructions = explode(',', $input);
@@ -18,8 +18,11 @@
         continue;
     }
 
-    $start_time = microtime(true);
-    for ($i = 0; $i < 1000; $i++) {
+    // This dance sequence loops after 24 iterations
+    $iterations = 1000000000;
+    $real_iterations = $iterations % 24;
+
+    for ($i = 0; $i < $real_iterations; $i++) {
         foreach ($instructions as $ins) {
             switch ($ins['command']) {
                 case 's':
@@ -34,34 +37,27 @@
             }
         }
     }
-    $end_time = microtime(true);
-    $length = $end_time - $start_time;
-    $dps = $i / $length;
 
-    echo "\n";
-    echo "Positions: " . implode('', $program_positions) . "\n";
-    echo "Dance Length: {$length}s ($dps per sec)\n";
+    echo "Positions: {$program_positions}\n";
 
-    function spin(&$array, $amount) {
-        $original_values = $array;
+    function spin(&$string, $amount) {
+        $length = strlen($string);
+        $amount = $amount % $length;
 
-        foreach ($original_values as $old_pos => $value) {
-            $new_pos = ($old_pos + $amount) % count($array);
-            $array[$new_pos] = $value;
-        }
+        $string = substr($string, -$amount) . substr($string, 0, $length-$amount);
     }
 
-    function exchange(&$array, $pos1, $pos2) {
-        $val1 = $array[$pos1];
-        $val2 = $array[$pos2];
+    function exchange(&$string, $pos1, $pos2) {
+        $val1 = $string[$pos1];
+        $val2 = $string[$pos2];
 
-        $array[$pos1] = $val2;
-        $array[$pos2] = $val1;
+        $string[$pos1] = $val2;
+        $string[$pos2] = $val1;
     }
 
-    function swap(&$array, $val1, $val2) {
-        $pos1 = array_search($val1, $array);
-        $pos2 = array_search($val2, $array);
+    function swap(&$string, $val1, $val2) {
+        $pos1 = strpos($string, $val1);
+        $pos2 = strpos($string, $val2);
 
-        exchange($array, $pos1, $pos2);
+        exchange($string, $pos1, $pos2);
     }
