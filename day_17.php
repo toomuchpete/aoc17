@@ -1,21 +1,21 @@
 <?php
 
-$buffer = new SplDoublyLinkedList();
-
-$buffer->push(0);
-
 $step_distance = 382;
-$position = 0;
 
-for ($i = 1; $i <= 2017; $i++) {
+$focus_position = 1;
+$focus_value    = -1;
+
+$position = 0;
+$list_count = 1;
+
+for ($i = 1; $i <= 50000000; $i++) {
     $position += $step_distance;
-    $position = ($position % $buffer->count())+1;
-    $buffer->add($position, $i);
+    $position = ($position % $list_count)+1;
+    $list_count++;
+
+    if ($position == $focus_position) {
+        $focus_value = $i;
+    }
 }
 
-echo "\n";
-echo "Position:   {$position}\n";
-echo "Value:      {$buffer[$position]}\n";
-echo "Next Value: {$buffer[$position+1]}\n";
-
-
+echo "Value at {$focus_position}: {$focus_value}\n";
