@@ -9,13 +9,18 @@ $input = trim(file_get_contents('./data/day_20.txt'));
 
 
 $particles = explode("\n", trim($input));
+for ($i = 0; $i < count($particles); $i++) {
+    $particles[$i] = parse_particle($particles[$i]);
+}
+
+// STAR ONE:
+
 $test_time = 1000;
 
 $closest_particle = -1;
 $closest_distance = -1;
 
 foreach ($particles as $index => $particle) {
-    $particle = parse_particle($particle);
     $distance = distance(position_at_step($particle, $test_time));
 
     if ($distance < $closest_distance || $closest_distance == -1) {
@@ -25,6 +30,37 @@ foreach ($particles as $index => $particle) {
 }
 
 echo "Closest Particle: {$closest_particle}\n";
+
+
+// STAR TWO:
+$destroyed_particles = 0;
+for ($time = 1; $time < 500; $time++) {
+    $collision_finder = [];
+
+    // Find Collisions
+    for ($i = 0; $i < count($particles); $i++) {
+        if ($particles[$i] == false) {continue;}
+        $pos = implode(',', position_at_step($particles[$i], $time));
+
+        if (isset($collision_finder[$pos]) == false) {
+            $collision_finder[$pos] = [];
+        }
+
+        $collision_finder[$pos][] = $i;
+    }
+
+    foreach ($collision_finder as $colliders) {
+        if (count($colliders) <= 1) { continue; }
+
+        foreach ($colliders as $index) {
+            $destroyed_particles++;
+            $particles[$index] = false;
+        }
+    }
+}
+
+echo "Total Particles: " . count($particles) . "\n";
+echo "Destroyed Particles: {$destroyed_particles}\n";
 
 
 function parse_particle($string) {
@@ -64,3 +100,5 @@ function calculate_new_position($start_pos, $start_vel, $acceleration, $time) {
 
     return $new_pos;
 }
+
+// function collision_time($p1, $p2)
