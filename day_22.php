@@ -32,15 +32,27 @@ $facing = 'up';
 
 $infection_count = 0;
 
-for ($burst = 0; $burst < 10000; $burst++) {
+for ($burst = 0; $burst < 10000000; $burst++) {
     $key = get_key($pos_x,$pos_y);
-    if ($map[$key] == '#') {
-        turn_right();
-        $map[$key] = '.';
-    } else {
-        turn_left();
-        $map[$key] = '#';
-        $infection_count++;
+
+    switch ($map[$key]) {
+        case '#':
+            $map[$key] = 'F';
+            turn_right();
+            break;
+        case '.':
+            $map[$key] = 'W';
+            turn_left();
+            break;
+        case 'W':
+            $map[$key] = '#';
+            $infection_count++;
+            break;
+        case 'F': 
+            $map[$key] = '.';
+            turn_right();
+            turn_right();
+            break;
     }
 
     switch ($facing) {
