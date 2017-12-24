@@ -11,7 +11,7 @@ $reg = [
     'h' => 0,
 ];
 
-$input = trim(file_get_contents('./data/day_23.txt'));
+$input = trim(file_get_contents('./data/day_23.opt'));
 
 $instructions = explode("\n", $input);
 
@@ -20,7 +20,7 @@ $ptr = 0;
 $mul_count = 0;
 while (true) {
     $move = 1;
-    $ins  = explode(' ', $instructions[$ptr]);
+    $ins  = explode(' ', trim($instructions[$ptr]));
 
     switch ($ins[0]) {
         case 'set':
@@ -33,8 +33,11 @@ while (true) {
             $reg[$ins[1]] *= get_val($ins[2]);
             $mul_count++;
             break;
+        case 'sqt':
+            $reg[$ins[1]] = ceil(sqrt(get_val($ins[1])));
+            break;
         case 'mod':
-            $reg[$proc][$ins[1]] = $reg[$proc][$ins[1]] % get_val($ins[2]);
+            $reg[$ins[1]] = $reg[$ins[1]] % get_val($ins[2]);
             break;
         case 'jnz':
             if (get_val($ins[1]) != 0) {
@@ -51,6 +54,8 @@ while (true) {
     $ptr += $move;
     if (isset($instructions[$ptr]) == false) {break;}
 }
+
+echo "H: {$reg['h']}\n";
 
 function get_val($name) {
     global $reg;
